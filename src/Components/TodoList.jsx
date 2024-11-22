@@ -13,6 +13,25 @@ const TodoList = () => {
         }
     };
 
+    const handleAddList = (index) => {
+        if(listInputs[index] && listInputs[index].trim() !== '') {
+            const newTodos = [...todos];
+            newTodos[index].lists.push(listInputs[index]);
+            setTodos(newTodos);
+            setListInputs('');
+        }
+    };
+
+    const handleListInputChange = (index, value) => {
+        setListInputs({...listInputs, [index]: value});
+    };
+
+    const handleDeleteTodo = (index) => {
+        const newTodos = [...todos];
+        newTodos.splice(index, 1);
+        setTodos(newTodos);
+    }
+
   return (
     <>
       <div className="todo-container">
@@ -25,7 +44,7 @@ const TodoList = () => {
               value={headingInput}
               onChange={(e) => {setHeadingInput(e.target.value);}} // Agregar controlador de evento onChange para actualizar el estado headingInput
             />
-            <button className="add-list-button" onClick={handleAddTodo}>Agregar Encabezado</button>
+            <button className="add-list-button" onClick={handleAddTodo}>Add Heading</button>
           </div>
       </div>
       <div className="todo_main">
@@ -33,15 +52,24 @@ const TodoList = () => {
           <div key={index} className="todo-card">
             <div className="heading_todo">
               <h3>{todo.heading}</h3> {/* Display the heading here */}
-              <button className="delete-button-heading" onClick={() => handleDeleteTodo(index)}>Delete Heading </button>
+              <button className="delete-button-heading" onClick={handleDeleteTodo}>Delete Heading </button>
             </div>
             <div className='add_list'>
-                <input type='text'
+                <ul>
+                    {todo.lists.map((list, listIndex) => (
+                        <li key={listIndex} className='todo_inside_list'>
+                            <p>{list}</p>
+                        </li>
+                    ))}
+                </ul>
+                <input 
+                type='text'
                 className='list-input'
                 placeholder='Add list'
                 value={listInputs[index] || ''}
-                onChange={(e) => handleListInputChange(index, e.target.value)}/>
-                <button className='add-list-button' onClick={() => handleAddlist(index)}>Add List</button>
+                onChange={(e) => handleListInputChange(index, e.target.value)}
+                />
+                <button className='add-list-button' onClick={() => handleAddList(index)}>Add List</button>
             </div>
           </div>
         ))}
